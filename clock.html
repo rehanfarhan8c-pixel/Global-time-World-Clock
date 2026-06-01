@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="GlobalTime Dashboard - Real-time world clocks for 30+ cities. Search and filter by city or country.">
+    <title>GlobalTime | World Clocks – All Cities & Countries</title>
+    
+    <!-- ✅ Embedded SVG Logo (no external dependencies) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%231e293b' stroke='%2338bdf8' stroke-width='4'/%3E%3Cpath d='M50 20 L50 50 L70 65' stroke='%2338bdf8' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='4' fill='%2338bdf8'/%3E%3C/svg%3E">
+    
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --hover-lift: 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(145deg, #111827 0%, #0f172a 100%);
+            border-bottom: 1px solid #334155;
+        }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .logo-svg {
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            transition: transform 0.2s ease;
+        }
+
+        .logo-svg:hover {
+            transform: rotate(5deg) scale(1.02);
+        }
+
+        .header-text h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, #38bdf8 80%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-text p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .search-container {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            padding: 0.9rem 1.8rem;
+            border-radius: 60px;
+            border: 2px solid #334155;
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.25s;
+        }
+
+        .search-bar:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+        }
+
+        .search-bar::placeholder {
+            color: #5b6e8c;
+            font-weight: 400;
+        }
+
+        .clock-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .clock-card {
+            background: linear-gradient(145deg, #1e293b, #182237);
+            padding: 1.6rem;
+            border-radius: 28px;
+            text-align: center;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.4);
+            border: 1px solid #334155;
+            transition: transform var(--hover-lift), box-shadow 0.2s;
+        }
+
+        .clock-card:hover {
+            transform: translateY(-6px);
+            border-color: #38bdf880;
+            box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .clock-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .country-badge {
+            font-size: 0.7rem;
+            background: #0f172a;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            color: #94a3b8;
+            font-weight: normal;
+        }
+
+        .timezone-offset {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            background: #0f172a80;
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+        }
+
+        .time-display {
+            font-size: 2.3rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .date-display {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .no-results {
+            text-align: center;
+            background: #1e293b80;
+            padding: 2.5rem;
+            border-radius: 2rem;
+            grid-column: 1 / -1;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            border: 1px dashed #475569;
+        }
+
+        .stats {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #5b6e8c;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            font-size: 0.8rem;
+            color: #5b6e8c;
+            border-top: 1px solid #1e2a3a;
+        }
+
+        @media (max-width: 640px) {
+            .clock-grid {
+                gap: 1rem;
+            }
+            .time-display {
+                font-size: 1.8rem;
+            }
+            .header-text h1 {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-wrapper">
+        <div class="logo-svg">
+            <svg width="56" height="56" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="46" fill="#1e293b" stroke="#38bdf8" stroke-width="3.5"/>
+                <path d="M50 25 L50 50 L68 62" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="50" cy="50" r="5" fill="#38bdf8" stroke="#0f172a" stroke-width="1.5"/>
+                <path d="M28 33 L36 40 M72 33 L64 40" stroke="#7aa9d4" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+                <circle cx="50" cy="50" r="32" stroke="#2d4a6e" stroke-width="1.8" stroke-dasharray="4 4" fill="none"/>
+            </svg>
+        </div>
+        <div class="header-text">
+            <h1>GlobalTime Dashboard</h1>
+            <p>🌎 30+ world cities • Live clocks • Search by city or country</p>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="search-container">
+        <input type="text" id="searchBar" class="search-bar" placeholder="🔍 Search for any city or country... (e.g., Tokyo, Brazil, France, Sydney)" aria-label="Filter cities and countries">
+    </div>
+    <div class="stats" id="stats">Loading clocks...</div>
+    <div class="clock-grid" id="clockGrid"></div>
+</div>
+
+<footer>
+    <p>⏱️ Real-time synchronized times | All cities visible through search | Data based on IANA timezones</p>
+</footer>
+
+<script>
+    // -------------------- EXTENSIVE LIST OF CITIES & COUNTRIES --------------------
+    // Each entry: display name (city, country), timezone IANA, search tags (country, region)
+    const citiesData = [
+        { name: "🇺🇸 New York", country: "USA", zone: "America/New_York", tags: "usa united states america nyc est" },
+        { name: "🇺🇸 Los Angeles", country: "USA", zone: "America/Los_Angeles", tags: "la california pst" },
+        { name: "🇺🇸 Chicago", country: "USA", zone: "America/Chicago", tags: "illinois midwest cst" },
+        { name: "🇨🇦 Toronto", country: "Canada", zone: "America/Toronto", tags: "ontario canada est" },
+        { name: "🇨🇦 Vancouver", country: "Canada", zone: "America/Vancouver", tags: "bc british columbia pst" },
+        { name: "🇲🇽 Mexico City", country: "Mexico", zone: "America/Mexico_City", tags: "cdmx" },
+        { name: "🇧🇷 São Paulo", country: "Brazil", zone: "America/Sao_Paulo", tags: "brasil brazil south america" },
+        { name: "🇬🇧 London", country: "United Kingdom", zone: "Europe/London", tags: "england gmt uk great britain" },
+        { name: "🇫🇷 Paris", country: "France", zone: "Europe/Paris", tags: "france europe cet" },
+        { name: "🇩🇪 Berlin", country: "Germany", zone: "Europe/Berlin", tags: "germany de" },
+        { name: "🇮🇹 Rome", country: "Italy", zone: "Europe/Rome", tags: "italy" },
+        { name: "🇪🇸 Madrid", country: "Spain", zone: "Europe/Madrid", tags: "spain" },
+        { name: "🇳🇱 Amsterdam", country: "Netherlands", zone: "Europe/Amsterdam", tags: "holland" },
+        { name: "🇷🇺 Moscow", country: "Russia", zone: "Europe/Moscow", tags: "russia msk" },
+        { name: "🇹🇷 Istanbul", country: "Turkey", zone: "Europe/Istanbul", tags: "turkey" },
+        { name: "🇮🇳 New Delhi", country: "India", zone: "Asia/Kolkata", tags: "india ist mumbai" },
+        { name: "🇮🇳 Mumbai", country: "India", zone: "Asia/Kolkata", tags: "bombay maharashtra" },
+        { name: "🇯🇵 Tokyo", country: "Japan", zone: "Asia/Tokyo", tags: "japan jst" },
+        { name: "🇨🇳 Shanghai", country: "China", zone: "Asia/Shanghai", tags: "china cst beijing" },
+        { name: "🇭🇰 Hong Kong", country: "Hong Kong", zone: "Asia/Hong_Kong", tags: "china hkt" },
+        { name: "🇰🇷 Seoul", country: "South Korea", zone: "Asia/Seoul", tags: "korea kst" },
+        { name: "🇸🇬 Singapore", country: "Singapore", zone: "Asia/Singapore", tags: "sg" },
+        { name: "🇦🇺 Sydney", country: "Australia", zone: "Australia/Sydney", tags: "australia nsw aedt" },
+        { name: "🇦🇺 Perth", country: "Australia", zone: "Australia/Perth", tags: "western australia" },
+        { name: "🇳🇿 Auckland", country: "New Zealand", zone: "Pacific/Auckland", tags: "nz nzt" },
+        { name: "🇿🇦 Johannesburg", country: "South Africa", zone: "Africa/Johannesburg", tags: "south africa sa" },
+        { name: "🇪🇬 Cairo", country: "Egypt", zone: "Africa/Cairo", tags: "egypt" },
+        { name: "🇦🇪 Dubai", country: "UAE", zone: "Asia/Dubai", tags: "united arab emirates gst" },
+        { name: "🇮🇱 Jerusalem", country: "Israel", zone: "Asia/Jerusalem", tags: "israel" },
+        { name: "🇸🇦 Riyadh", country: "Saudi Arabia", zone: "Asia/Riyadh", tags: "saudi" },
+        { name: "🇵🇰 Karachi", country: "Pakistan", zone: "Asia/Karachi", tags: "pakistan" },
+        { name: "🇧🇩 Dhaka", country: "Bangladesh", zone: "Asia/Dhaka", tags: "bangladesh" },
+        { name: "🇮🇩 Jakarta", country: "Indonesia", zone: "Asia/Jakarta", tags: "indonesia" },
+        { name: "🇵🇭 Manila", country: "Philippines", zone: "Asia/Manila", tags: "philippines" },
+        { name: "🇻🇳 Ho Chi Minh", country: "Vietnam", zone: "Asia/Ho_Chi_Minh", tags: "vietnam" },
+        { name: "🇦🇷 Buenos Aires", country: "Argentina", zone: "America/Argentina/Buenos_Aires", tags: "argentina" },
+        { name: "🇨🇱 Santiago", country: "Chile", zone: "America/Santiago", tags: "chile" },
+        { name: "🇨🇴 Bogotá", country: "Colombia", zone: "America/Bogota", tags: "colombia" },
+        { name: "🇵🇪 Lima", country: "Peru", zone: "America/Lima", tags: "peru" }
+    ];
+
+    // DOM elements
+    const clockGrid = document.getElementById('clockGrid');
+    const searchInput = document.getElementById('searchBar');
+    const statsSpan = document.getElementById('stats');
+
+    // Store clock elements references for performance
+    let clockElements = []; // { id, timeElem, dateElem, card }
+
+    // Helper: generate unique ID for each city (sanitized)
+    function generateId(cityName) {
+        return cityName.toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+
+    // Build the entire clock grid dynamically
+    function buildClockGrid() {
+        clockGrid.innerHTML = '';
+        clockElements = [];
+        
+        citiesData.forEach((city, idx) => {
+            const cardId = `card_${generateId(city.name)}`;
+            const timeId = `time_${idx}`;
+            const dateId = `date_${idx}`;
+            
+            const card = document.createElement('div');
+            card.className = 'clock-card';
+            card.setAttribute('data-name', `${city.name} ${city.country} ${city.tags}`.toLowerCase());
+            card.id = cardId;
+            
+            card.innerHTML = `
+                <h3>${city.name} <span class="country-badge">${city.country}</span></h3>
+                <div class="timezone-offset">${city.zone}</div>
+                <div class="time-display" id="${timeId}">--:--:--</div>
+                <div class="date-display" id="${dateId}">Loading...</div>
+            `;
+            
+            clockGrid.appendChild(card);
+            clockElements.push({
+                id: idx,
+                zone: city.zone,
+                timeElem: document.getElementById(timeId),
+                dateElem: document.getElementById(dateId),
+                card: card
+            });
+        });
+        updateStats();
+    }
+
+    // Update all clocks using stored references
+    function updateAllClocks() {
+        const now = new Date();
+        for (let item of clockElements) {
+            try {
+                const timeString = now.toLocaleTimeString('en-US', {
+                    timeZone: item.zone,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                });
+                const dateString = now.toLocaleDateString('en-US', {
+                    timeZone: item.zone,
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                if (item.timeElem) item.timeElem.textContent = timeString;
+                if (item.dateElem) item.dateElem.textContent = dateString;
+            } catch (e) {
+                // Fallback for any timezone that might fail (shouldn't happen with IANA)
+                if (item.timeElem) item.timeElem.textContent = now.toLocaleTimeString();
+                if (item.dateElem) item.dateElem.textContent = now.toLocaleDateString();
+            }
+        }
+    }
+
+    // Update stats: show visible / total
+    function updateStats() {
+        const visible = Array.from(document.querySelectorAll('.clock-card')).filter(card => card.style.display !== 'none').length;
+        statsSpan.textContent = `🌍 Showing ${visible} of ${citiesData.length} world cities · Type to filter by city or country`;
+    }
+
+    // Filter clocks based on search input
+    function filterClocks() {
+        const query = searchInput.value.trim().toLowerCase();
+        const cards = document.querySelectorAll('.clock-card');
+        let visibleCount = 0;
+        
+        cards.forEach(card => {
+            const searchData = card.getAttribute('data-name') || '';
+            const matches = query === '' || searchData.includes(query);
+            if (matches) {
+                card.style.display = '';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Handle "no results" message
+        let existingMsg = document.getElementById('noResultsMsg');
+        if (visibleCount === 0 && cards.length > 0) {
+            if (!existingMsg) {
+                const noMsg = document.createElement('div');
+                noMsg.id = 'noResultsMsg';
+                noMsg.className = 'no-results';
+                noMsg.innerHTML = '🔍 No cities match your search. Try "France", "Tokyo", "Brazil", or "Sydney".';
+                clockGrid.appendChild(noMsg);
+            }
+        } else {
+            if (existingMsg) existingMsg.remove();
+        }
+        updateStats();
+    }
+
+    // Debounced search
+    let debounceTimer;
+    function debouncedFilter() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => filterClocks(), 200);
+    }
+
+    // Initialize everything
+    function init() {
+        buildClockGrid();
+        updateAllClocks();
+        setInterval(updateAllClocks, 1000);
+        
+        searchInput.addEventListener('input', debouncedFilter);
+        
+        // Refresh filter on page load (ensures stats correct)
+        window.addEventListener('load', () => {
+            filterClocks();
+            updateAllClocks();
+        });
+        
+        // Re-filter after any potential dynamic changes (none, but safe)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) updateAllClocks();
+        });
+    }
+    
+    init();
+</script>
+</body>
+</html>
