@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="GlobalTime Dashboard - Real-time world clocks for 30+ cities. Search and filter by city or country.">
-    <title>GlobalTime | World Clocks – All Cities & Countries</title>
+    <meta name="description" content="GlobalTime Dashboard - Real-time world clocks for 40+ cities. Animated live clocks with smooth effects.">
+    <title>GlobalTime | Animated World Clocks</title>
     
-    <!-- ✅ Embedded SVG Logo (no external dependencies) -->
+    <!-- Embedded SVG Logo with animation -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%231e293b' stroke='%2338bdf8' stroke-width='4'/%3E%3Cpath d='M50 20 L50 50 L70 65' stroke='%2338bdf8' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='50' r='4' fill='%2338bdf8'/%3E%3C/svg%3E">
     
     <style>
@@ -16,7 +16,8 @@
             --accent-color: #38bdf8;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --hover-lift: 0.2s ease;
+            --gradient-start: #0f172a;
+            --gradient-end: #1e1b4b;
         }
 
         * {
@@ -27,17 +28,44 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
             color: var(--text-main);
             line-height: 1.5;
-            scroll-behavior: smooth;
+            min-height: 100vh;
+            animation: bgShift 12s infinite alternate;
+        }
+
+        /* Animated gradient background */
+        @keyframes bgShift {
+            0% {
+                background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            }
+            50% {
+                background: linear-gradient(135deg, #111827 0%, #2d2a5e 100%);
+            }
+            100% {
+                background: linear-gradient(135deg, #0a0f1f 0%, #1a1a4f 100%);
+            }
         }
 
         header {
             text-align: center;
             padding: 2rem 1.5rem;
-            background: linear-gradient(145deg, #111827 0%, #0f172a 100%);
-            border-bottom: 1px solid #334155;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+            animation: slideDown 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .logo-wrapper {
@@ -46,34 +74,54 @@
             justify-content: center;
             gap: 1.25rem;
             flex-wrap: wrap;
-            max-width: 900px;
-            margin: 0 auto;
         }
 
         .logo-svg {
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-            transition: transform 0.2s ease;
+            filter: drop-shadow(0 4px 12px rgba(56, 189, 248, 0.4));
+            transition: transform 0.3s ease, filter 0.3s;
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                filter: drop-shadow(0 4px 8px rgba(56, 189, 248, 0.3));
+                transform: scale(1);
+            }
+            100% {
+                filter: drop-shadow(0 8px 20px rgba(56, 189, 248, 0.7));
+                transform: scale(1.02);
+            }
         }
 
         .logo-svg:hover {
-            transform: rotate(5deg) scale(1.02);
+            transform: rotate(8deg) scale(1.05);
+            filter: drop-shadow(0 0 12px #38bdf8);
         }
 
         .header-text h1 {
             font-size: 2.2rem;
             font-weight: 700;
-            letter-spacing: -0.5px;
             background: linear-gradient(135deg, #ffffff 0%, #38bdf8 80%);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            margin-bottom: 0.3rem;
+            animation: fadeInUp 0.6s ease;
         }
 
         .header-text p {
             color: var(--text-muted);
-            font-size: 1rem;
-            font-weight: 400;
+            animation: fadeInUp 0.6s ease 0.1s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .container {
@@ -82,11 +130,11 @@
             padding: 2rem 1.5rem;
         }
 
+        /* Search Bar with animation */
         .search-container {
             margin-bottom: 2rem;
             display: flex;
             justify-content: center;
-            position: relative;
         }
 
         .search-bar {
@@ -95,44 +143,121 @@
             padding: 0.9rem 1.8rem;
             border-radius: 60px;
             border: 2px solid #334155;
-            background-color: var(--card-bg);
+            background-color: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(4px);
             color: var(--text-main);
             font-size: 1rem;
             outline: none;
-            transition: all 0.25s;
+            transition: all 0.3s ease;
+            animation: fadeInScale 0.5s ease;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .search-bar:focus {
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.3), 0 0 15px rgba(56, 189, 248, 0.5);
+            transform: scale(1.01);
         }
 
-        .search-bar::placeholder {
-            color: #5b6e8c;
-            font-weight: 400;
+        /* Animated stats */
+        .stats {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #a5b4fc;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.8s;
         }
 
+        /* Clock Grid */
         .clock-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.8rem;
-            margin-bottom: 2rem;
         }
 
+        /* Card entrance animation with staggered effect */
         .clock-card {
-            background: linear-gradient(145deg, #1e293b, #182237);
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(24, 34, 55, 0.95));
+            backdrop-filter: blur(4px);
             padding: 1.6rem;
-            border-radius: 28px;
+            border-radius: 32px;
             text-align: center;
-            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.4);
-            border: 1px solid #334155;
-            transition: transform var(--hover-lift), box-shadow 0.2s;
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            animation: cardReveal 0.5s ease backwards;
+            position: relative;
+            overflow: hidden;
         }
 
+        /* Staggered animation delay */
+        .clock-card:nth-child(1) { animation-delay: 0.02s; }
+        .clock-card:nth-child(2) { animation-delay: 0.05s; }
+        .clock-card:nth-child(3) { animation-delay: 0.08s; }
+        .clock-card:nth-child(4) { animation-delay: 0.11s; }
+        .clock-card:nth-child(5) { animation-delay: 0.14s; }
+        .clock-card:nth-child(6) { animation-delay: 0.17s; }
+        .clock-card:nth-child(7) { animation-delay: 0.20s; }
+        .clock-card:nth-child(8) { animation-delay: 0.23s; }
+        .clock-card:nth-child(9) { animation-delay: 0.26s; }
+        .clock-card:nth-child(10) { animation-delay: 0.29s; }
+        .clock-card:nth-child(11) { animation-delay: 0.32s; }
+        .clock-card:nth-child(12) { animation-delay: 0.35s; }
+        .clock-card:nth-child(13) { animation-delay: 0.38s; }
+        .clock-card:nth-child(14) { animation-delay: 0.41s; }
+        .clock-card:nth-child(15) { animation-delay: 0.44s; }
+        .clock-card:nth-child(16) { animation-delay: 0.47s; }
+        .clock-card:nth-child(17) { animation-delay: 0.50s; }
+        .clock-card:nth-child(18) { animation-delay: 0.53s; }
+        .clock-card:nth-child(19) { animation-delay: 0.56s; }
+        .clock-card:nth-child(20) { animation-delay: 0.59s; }
+
+        @keyframes cardReveal {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Hover effect with glow and lift */
         .clock-card:hover {
-            transform: translateY(-6px);
-            border-color: #38bdf880;
-            box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.5);
+            transform: translateY(-10px) scale(1.02);
+            border-color: #38bdf8;
+            box-shadow: 0 20px 35px -12px rgba(56, 189, 248, 0.4);
+            background: linear-gradient(145deg, #243049, #1a2538);
+        }
+
+        /* Animated shine overlay on hover */
+        .clock-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            border-radius: 32px;
+        }
+
+        .clock-card:hover::after {
+            opacity: 1;
         }
 
         .clock-card h3 {
@@ -148,22 +273,29 @@
         .country-badge {
             font-size: 0.7rem;
             background: #0f172a;
-            padding: 0.2rem 0.6rem;
+            padding: 0.2rem 0.7rem;
             border-radius: 20px;
-            color: #94a3b8;
+            color: #a5b4fc;
             font-weight: normal;
+            transition: all 0.2s;
+        }
+
+        .clock-card:hover .country-badge {
+            background: #1e293b;
+            color: #38bdf8;
         }
 
         .timezone-offset {
             font-size: 0.7rem;
             color: var(--text-muted);
-            background: #0f172a80;
+            background: rgba(15, 23, 42, 0.7);
             display: inline-block;
             padding: 0.2rem 0.8rem;
             border-radius: 20px;
             margin-bottom: 1rem;
         }
 
+        /* Animated time display - subtle pulse on each update */
         .time-display {
             font-size: 2.3rem;
             font-weight: 700;
@@ -171,41 +303,62 @@
             font-family: 'JetBrains Mono', monospace;
             letter-spacing: 1px;
             margin-bottom: 0.5rem;
+            transition: text-shadow 0.1s ease;
+            animation: timePulse 0.3s ease-out;
+        }
+
+        @keyframes timePulse {
+            0% {
+                text-shadow: 0 0 0px #38bdf8;
+                transform: scale(1);
+            }
+            50% {
+                text-shadow: 0 0 8px #38bdf8, 0 0 12px #38bdf8;
+                transform: scale(1.02);
+            }
+            100% {
+                text-shadow: 0 0 0px #38bdf8;
+                transform: scale(1);
+            }
         }
 
         .date-display {
             font-size: 0.85rem;
             color: var(--text-muted);
             font-weight: 500;
+            transition: all 0.2s;
         }
 
+        /* No results message animation */
         .no-results {
             text-align: center;
-            background: #1e293b80;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(8px);
             padding: 2.5rem;
             border-radius: 2rem;
             grid-column: 1 / -1;
             font-size: 1.1rem;
-            color: var(--text-muted);
-            border: 1px dashed #475569;
-        }
-
-        .stats {
-            text-align: center;
-            font-size: 0.8rem;
-            color: #5b6e8c;
-            margin-bottom: 1rem;
+            color: #cbd5e1;
+            border: 1px dashed #38bdf8;
+            animation: fadeInUp 0.4s ease;
         }
 
         footer {
             text-align: center;
-            margin-top: 2rem;
+            margin-top: 3rem;
             padding: 1.5rem;
             font-size: 0.8rem;
-            color: #5b6e8c;
-            border-top: 1px solid #1e2a3a;
+            color: #7e8aa8;
+            border-top: 1px solid rgba(56, 189, 248, 0.2);
+            animation: fadeIn 1s;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive */
         @media (max-width: 640px) {
             .clock-grid {
                 gap: 1rem;
@@ -215,6 +368,9 @@
             }
             .header-text h1 {
                 font-size: 1.7rem;
+            }
+            .clock-card {
+                padding: 1.2rem;
             }
         }
     </style>
@@ -234,26 +390,25 @@
         </div>
         <div class="header-text">
             <h1>GlobalTime Dashboard</h1>
-            <p>🌎 30+ world cities • Live clocks • Search by city or country</p>
+            <p>🌎 40+ animated world clocks • Real-time • Search by city or country</p>
         </div>
     </div>
 </header>
 
 <div class="container">
     <div class="search-container">
-        <input type="text" id="searchBar" class="search-bar" placeholder="🔍 Search for any city or country... (e.g., Tokyo, Brazil, France, Sydney)" aria-label="Filter cities and countries">
+        <input type="text" id="searchBar" class="search-bar" placeholder="🔍 Search for any city or country... (e.g., Tokyo, Brazil, France, Sydney)" aria-label="Filter cities">
     </div>
-    <div class="stats" id="stats">Loading clocks...</div>
+    <div class="stats" id="stats">✨ Loading animated clocks...</div>
     <div class="clock-grid" id="clockGrid"></div>
 </div>
 
 <footer>
-    <p>⏱️ Real-time synchronized times | All cities visible through search | Data based on IANA timezones</p>
+    <p>⏱️ Live synchronized times • Smooth second updates • Hover for glow & lift</p>
 </footer>
 
 <script>
-    // -------------------- EXTENSIVE LIST OF CITIES & COUNTRIES --------------------
-    // Each entry: display name (city, country), timezone IANA, search tags (country, region)
+    // Extensive cities list with countries and timezones
     const citiesData = [
         { name: "🇺🇸 New York", country: "USA", zone: "America/New_York", tags: "usa united states america nyc est" },
         { name: "🇺🇸 Los Angeles", country: "USA", zone: "America/Los_Angeles", tags: "la california pst" },
@@ -293,36 +448,26 @@
         { name: "🇦🇷 Buenos Aires", country: "Argentina", zone: "America/Argentina/Buenos_Aires", tags: "argentina" },
         { name: "🇨🇱 Santiago", country: "Chile", zone: "America/Santiago", tags: "chile" },
         { name: "🇨🇴 Bogotá", country: "Colombia", zone: "America/Bogota", tags: "colombia" },
-        { name: "🇵🇪 Lima", country: "Peru", zone: "America/Lima", tags: "peru" }
+        { name: "🇵🇪 Lima", country: "Peru", zone: "America/Lima", tags: "peru" },
+        { name: "🇨🇭 Zurich", country: "Switzerland", zone: "Europe/Zurich", tags: "swiss" }
     ];
 
-    // DOM elements
     const clockGrid = document.getElementById('clockGrid');
     const searchInput = document.getElementById('searchBar');
     const statsSpan = document.getElementById('stats');
 
-    // Store clock elements references for performance
-    let clockElements = []; // { id, timeElem, dateElem, card }
+    let clockElements = [];
 
-    // Helper: generate unique ID for each city (sanitized)
-    function generateId(cityName) {
-        return cityName.toLowerCase().replace(/[^a-z0-9]/g, '');
-    }
-
-    // Build the entire clock grid dynamically
     function buildClockGrid() {
         clockGrid.innerHTML = '';
         clockElements = [];
         
         citiesData.forEach((city, idx) => {
-            const cardId = `card_${generateId(city.name)}`;
             const timeId = `time_${idx}`;
             const dateId = `date_${idx}`;
-            
             const card = document.createElement('div');
             card.className = 'clock-card';
             card.setAttribute('data-name', `${city.name} ${city.country} ${city.tags}`.toLowerCase());
-            card.id = cardId;
             
             card.innerHTML = `
                 <h3>${city.name} <span class="country-badge">${city.country}</span></h3>
@@ -330,10 +475,8 @@
                 <div class="time-display" id="${timeId}">--:--:--</div>
                 <div class="date-display" id="${dateId}">Loading...</div>
             `;
-            
             clockGrid.appendChild(card);
             clockElements.push({
-                id: idx,
                 zone: city.zone,
                 timeElem: document.getElementById(timeId),
                 dateElem: document.getElementById(dateId),
@@ -343,9 +486,13 @@
         updateStats();
     }
 
-    // Update all clocks using stored references
+    // Function to update clocks with animation class on time elements
+    let lastSecond = -1;
     function updateAllClocks() {
         const now = new Date();
+        const currentSecond = now.getSeconds();
+        const shouldAnimate = currentSecond !== lastSecond;
+        
         for (let item of clockElements) {
             try {
                 const timeString = now.toLocaleTimeString('en-US', {
@@ -362,23 +509,28 @@
                     day: 'numeric',
                     year: 'numeric'
                 });
-                if (item.timeElem) item.timeElem.textContent = timeString;
+                if (item.timeElem) {
+                    if (shouldAnimate) {
+                        item.timeElem.style.animation = 'none';
+                        item.timeElem.offsetHeight; // force reflow
+                        item.timeElem.style.animation = 'timePulse 0.25s ease-out';
+                    }
+                    item.timeElem.textContent = timeString;
+                }
                 if (item.dateElem) item.dateElem.textContent = dateString;
             } catch (e) {
-                // Fallback for any timezone that might fail (shouldn't happen with IANA)
                 if (item.timeElem) item.timeElem.textContent = now.toLocaleTimeString();
                 if (item.dateElem) item.dateElem.textContent = now.toLocaleDateString();
             }
         }
+        lastSecond = currentSecond;
     }
 
-    // Update stats: show visible / total
     function updateStats() {
         const visible = Array.from(document.querySelectorAll('.clock-card')).filter(card => card.style.display !== 'none').length;
-        statsSpan.textContent = `🌍 Showing ${visible} of ${citiesData.length} world cities · Type to filter by city or country`;
+        statsSpan.textContent = `🌍 Showing ${visible} of ${citiesData.length} world cities · Type to filter · ✨ Hover for effects`;
     }
 
-    // Filter clocks based on search input
     function filterClocks() {
         const query = searchInput.value.trim().toLowerCase();
         const cards = document.querySelectorAll('.clock-card');
@@ -387,15 +539,10 @@
         cards.forEach(card => {
             const searchData = card.getAttribute('data-name') || '';
             const matches = query === '' || searchData.includes(query);
-            if (matches) {
-                card.style.display = '';
-                visibleCount++;
-            } else {
-                card.style.display = 'none';
-            }
+            card.style.display = matches ? '' : 'none';
+            if (matches) visibleCount++;
         });
         
-        // Handle "no results" message
         let existingMsg = document.getElementById('noResultsMsg');
         if (visibleCount === 0 && cards.length > 0) {
             if (!existingMsg) {
@@ -405,34 +552,26 @@
                 noMsg.innerHTML = '🔍 No cities match your search. Try "France", "Tokyo", "Brazil", or "Sydney".';
                 clockGrid.appendChild(noMsg);
             }
-        } else {
-            if (existingMsg) existingMsg.remove();
-        }
+        } else if (existingMsg) existingMsg.remove();
+        
         updateStats();
     }
 
-    // Debounced search
     let debounceTimer;
     function debouncedFilter() {
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => filterClocks(), 200);
+        debounceTimer = setTimeout(filterClocks, 200);
     }
 
-    // Initialize everything
     function init() {
         buildClockGrid();
         updateAllClocks();
         setInterval(updateAllClocks, 1000);
-        
         searchInput.addEventListener('input', debouncedFilter);
-        
-        // Refresh filter on page load (ensures stats correct)
         window.addEventListener('load', () => {
             filterClocks();
             updateAllClocks();
         });
-        
-        // Re-filter after any potential dynamic changes (none, but safe)
         document.addEventListener('visibilitychange', () => {
             if (!document.hidden) updateAllClocks();
         });
